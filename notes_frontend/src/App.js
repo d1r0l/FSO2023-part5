@@ -34,8 +34,8 @@ const App = () => {
   const [ newNote, setNewNote ] = useState('A new note...')
   const [ showAll, setShowAll ] = useState(true)
   const [ errorMessage, setErrorMessage ] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [ username, setUsername ] = useState('')
+  const [ password, setPassword ] = useState('')
   // eslint-disable-next-line no-unused-vars
   const [user, setUser] = useState(null)
 
