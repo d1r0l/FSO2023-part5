@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Note from './componets/Note'
 import LoginForm from './componets/LoginForm'
 import NoteForm from './componets/NoteForm'
@@ -64,6 +64,7 @@ const App = () => {
   }
 
   const addNote = (event) => {
+    noteFormRef.current.toggleVisibility()
     event.preventDefault()
     const newObject = {
       id: notes.length + 1,
@@ -102,6 +103,8 @@ const App = () => {
     }
   }
 
+  const noteFormRef = useRef()
+
   return (
     <div>
       <h1>Notes</h1>
@@ -120,7 +123,7 @@ const App = () => {
       {user &&
         <div>
           <p>{user.name} logged in</p>
-          <Togglable buttonLabel="new note">
+          <Togglable buttonLabel='new note' ref={noteFormRef}>
             <NoteForm
               onSubmit={addNote}
               handleChange={handleNoteChange}
