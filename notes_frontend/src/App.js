@@ -1,33 +1,12 @@
 import { useState, useEffect } from 'react'
 import Note from './componets/Note'
+import LoginForm from './componets/LoginForm'
+import NoteForm from './componets/NoteForm'
+import Togglable from './componets/Togglable'
+import Notification from './componets/Notification'
+import Footer from './componets/Footer'
 import noteService from './services/notes'
 import loginService from './services/login'
-
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null
-  }
-
-  return (
-    <div className='error'>
-      {message}
-    </div>
-  )
-}
-
-const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2022</em>
-    </div>
-  )
-}
 
 const App = () => {
   const [ notes, setNotes ] = useState([])
@@ -36,8 +15,7 @@ const App = () => {
   const [ errorMessage, setErrorMessage ] = useState(null)
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  // eslint-disable-next-line no-unused-vars
-  const [user, setUser] = useState(null)
+  const [ user, setUser ] = useState(null)
 
   const toggleImportanceOf = (id) => {
     const note = notes.find(note => note.id === id)
@@ -124,49 +102,32 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input
-        value={newNote}
-        onChange={handleNoteChange}
-      />
-      <button type="submit">save</button>
-    </form>
-  )
-
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      {!user && loginForm()}
-      {user && <div>
-        <p>{user.name} logged in</p>
-        {noteForm()}
-      </div>
+      {!user &&
+        <Togglable buttonLabel="log in">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+      }
+      {user &&
+        <div>
+          <p>{user.name} logged in</p>
+          <Togglable buttonLabel="new note">
+            <NoteForm
+              onSubmit={addNote}
+              handleChange={handleNoteChange}
+              value={newNote}
+            />
+          </Togglable>
+        </div>
       }
       <div>
         <button onClick={() => setShowAll(!showAll)}>
