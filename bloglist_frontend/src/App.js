@@ -5,6 +5,28 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+// eslint-disable-next-line react/prop-types
+const Notification = ({ text, color }) => {
+  if (text === '') return null
+  else {
+    return (
+      <div
+        style={{
+          color: color,
+          background: 'lightgrey',
+          fontSize: 20,
+          borderStyle: 'solid',
+          borderRadius: 5,
+          padding: 10,
+          marginBottom: 10
+        }}
+      >
+        {text}
+      </div>
+    )
+  }
+}
+
 const App = () => {
   const [ blogs, setBlogs ] = useState([])
   const [ username, setUsername ] = useState('')
@@ -13,10 +35,11 @@ const App = () => {
   const [ title, setTitle ] = useState('')
   const [ author, setAuthor ] = useState('')
   const [ url, setUrl ] = useState('')
-
+  const [ notifyColor, setNotifyColor ] = useState('green')
+  const [ notifyText, setNotifyText ] = useState('')
 
   useEffect(() => {
-    const blogsLoader = async() => {
+    const blogsLoader = async () => {
       const response = await blogService.getAll()
       setBlogs(response)
     }
@@ -24,8 +47,9 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loadedUser = JSON.parse(window.localStorage.getItem('loggedBloglistAppUser'))
-    if (loadedUser) {
+    const storedUser = window.localStorage.getItem('loggedBloglistAppUser')
+    if (storedUser) {
+      const loadedUser = JSON.parse(storedUser)
       setUser(loadedUser)
     }
   }, [])
@@ -42,12 +66,16 @@ const App = () => {
       setUser(loggedUser)
       setPassword('')
       setUsername('')
+      setNotification('login successful', 'green')
+    } else {
+      setNotification('wrong credentials', 'red')
     }
   }
 
   const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('loggedBloglistAppUser')
+    setNotification('logged out', 'green')
   }
 
   const handleCreateNewBlog = async (event) => {
@@ -61,9 +89,20 @@ const App = () => {
       const savedBlog = await blogService.createNew(newBlog, user.token)
       const updatedBlogs = blogs.concat(savedBlog)
       setBlogs(updatedBlogs)
+      setNotification(`a new blog "${savedBlog.title}" by "${savedBlog.author}" added`, 'green')
     } catch (error) {
-      console.log(error)
+      if (error.response.data.error) {
+        setNotification(error.response.data.error, 'red')
+      } else {
+        setNotification('an error occured', 'red')
+      }
     }
+  }
+
+  const setNotification = (text, color) => {
+    setNotifyText(text)
+    setNotifyColor(color)
+    setTimeout(() => setNotifyText(''), 2500)
   }
 
   const loginForm = () => {
@@ -128,7 +167,6 @@ const App = () => {
   const blogList = () => {
     return(
       <div>
-        <h2>blogs</h2>
         <p>
           {user.name} logged in
           <button type='button' onClick={handleLogout}>
@@ -148,6 +186,8 @@ const App = () => {
 
   return (
     <div>
+      <h2>blogs</h2>
+      <Notification text={notifyText} color={notifyColor}/>
       {user
         ? blogList()
         : loginForm()
