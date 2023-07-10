@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-const BlogCreateForm = ({
+const BlogForm = ({
   handleSubmit,
   handleTitleChange,
   handleAuthorChange,
@@ -40,7 +40,7 @@ const BlogCreateForm = ({
   )
 }
 
-BlogCreateForm.propTypes = {
+BlogForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleTitleChange: PropTypes.func.isRequired,
   handleAuthorChange: PropTypes.func.isRequired,
@@ -50,4 +50,4 @@ BlogCreateForm.propTypes = {
   url: PropTypes.string.isRequired
 }
 
-export default BlogCreateForm
+export default BlogForm

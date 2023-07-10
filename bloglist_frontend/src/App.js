@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import BlogCreateForm from './components/BlogCreateForm'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [ blogs, setBlogs ] = useState([])
@@ -16,6 +17,8 @@ const App = () => {
   const [ url, setUrl ] = useState('')
   const [ notifyColor, setNotifyColor ] = useState('green')
   const [ notifyText, setNotifyText ] = useState('')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const blogsLoader = async () => {
@@ -67,9 +70,14 @@ const App = () => {
     try {
       const savedBlog = await blogService.createNew(newBlog, user.token)
       const updatedBlogs = blogs.concat(savedBlog)
+      blogFormRef.current.toggleVisibility()
       setBlogs(updatedBlogs)
       setNotification(`a new blog "${savedBlog.title}" by "${savedBlog.author}" added`, 'green')
+      setTitle('')
+      setAuthor('')
+      setUrl('')
     } catch (error) {
+      console.log(error)
       if (error.response.data.error) {
         setNotification(error.response.data.error, 'red')
       } else {
@@ -88,20 +96,22 @@ const App = () => {
     return(
       <div>
         <p>
-          {user.name} logged in
+          {user.name} logged in&nbsp;
           <button type='button' onClick={handleLogout}>
             logout
           </button>
         </p>
-        <BlogCreateForm
-          handleSubmit={handleCreateNewBlog}
-          handleTitleChange={({target}) => setTitle(target.value)}
-          handleAuthorChange={({target}) => setAuthor(target.value)}
-          handleUrlChange={({target}) => setUrl(target.value)}
-          title={title}
-          author={author}
-          url={url}
-        />
+        <Togglable buttonLabel='new blog' ref={blogFormRef}>
+          <BlogForm
+            handleSubmit={handleCreateNewBlog}
+            handleTitleChange={({target}) => setTitle(target.value)}
+            handleAuthorChange={({target}) => setAuthor(target.value)}
+            handleUrlChange={({target}) => setUrl(target.value)}
+            title={title}
+            author={author}
+            url={url}
+          />
+        </Togglable>
         <br/>
         <div>
           {blogs.map(blog =>
@@ -114,7 +124,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <h2>Blogs</h2>
       <Notification text={notifyText} color={notifyColor}/>
       {user
         ? blogList()
