@@ -20,6 +20,8 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
+
   useEffect(() => {
     const blogsLoader = async () => {
       const response = await blogService.getAll()
@@ -144,7 +146,7 @@ const App = () => {
         </Togglable>
         <br/>
         <div>
-          {blogs.map(blog =>
+          {sortBlogs(blogs).map(blog =>
             <Blog key={blog.id} blog={blog} handleLikeClick={() => handleLikeBlog(blog)} />
           )}
         </div>
