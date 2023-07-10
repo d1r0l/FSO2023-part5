@@ -18,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "backend": "cd ../../part4/bloglist/ && npm run dev",
+    "backend": "cd ../bloglist_backend/ && npm run dev",
     "eslint": "eslint ."
   },
   "eslintConfig": {
