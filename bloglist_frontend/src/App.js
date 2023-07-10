@@ -1,31 +1,8 @@
-/* eslint-disable no-constant-condition */
-/* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
-// eslint-disable-next-line react/prop-types
-const Notification = ({ text, color }) => {
-  if (text === '') return null
-  else {
-    return (
-      <div
-        style={{
-          color: color,
-          background: 'lightgrey',
-          fontSize: 20,
-          borderStyle: 'solid',
-          borderRadius: 5,
-          padding: 10,
-          marginBottom: 10
-        }}
-      >
-        {text}
-      </div>
-    )
-  }
-}
 
 const App = () => {
   const [ blogs, setBlogs ] = useState([])

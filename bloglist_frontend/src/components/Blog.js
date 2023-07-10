@@ -1,9 +1,13 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types'
+
 const Blog = ({blog}) => (
   <div>
     {blog.title} by {blog.author}
   </div>  
 )
+
+Blog.propTypes = {
+  blog: PropTypes.array
+}
 
 export default Blog
