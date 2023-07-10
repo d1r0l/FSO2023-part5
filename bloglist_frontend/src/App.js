@@ -186,8 +186,8 @@ const App = () => {
         ? blogList()
         : <LoginForm
           handleSubmit={handleLogin}
-          handleUsernameChange={({target}) => setUsername(target.value)}
-          handlePasswordChange={({target}) => setPassword(target.value)}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
           username={username}
           password={password}
         />
