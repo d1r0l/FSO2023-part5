@@ -94,6 +94,28 @@ const App = () => {
     }
   }
 
+  const handleLikeBlog = async (blog) => {
+    try {
+      const requestBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+      const responseBlog = await blogService.addLike(requestBlog, user.token)
+      const updatedBlog = { ...responseBlog, user: blog.user }
+      const updatedBlogs = blogs.map(blog =>
+        blog.id === responseBlog.id
+          ? updatedBlog
+          : blog
+      )
+      setBlogs(updatedBlogs)
+      setNotification(`a blog "${responseBlog.title}" by "${responseBlog.author}" likes updated`, 'green')
+    } catch (error) {
+      console.log(error)
+      if (error.response.data.error) {
+        setNotification(error.response.data.error, 'red')
+      } else {
+        setNotification('an error occured', 'red')
+      }
+    }
+  }
+
   const setNotification = (text, color) => {
     setNotifyText(text)
     setNotifyColor(color)
@@ -123,7 +145,7 @@ const App = () => {
         <br/>
         <div>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLikeClick={() => handleLikeBlog(blog)} />
           )}
         </div>
       </div>
