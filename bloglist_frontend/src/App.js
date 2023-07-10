@@ -96,11 +96,11 @@ const App = () => {
     }
   }
 
-  const handleLikeBlog = async (blog) => {
+  const handleLikeBlog = async (selectedBlog) => {
     try {
-      const requestBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+      const requestBlog = { ...selectedBlog, likes: selectedBlog.likes + 1, user: selectedBlog.user.id }
       const responseBlog = await blogService.addLike(requestBlog, user.token)
-      const updatedBlog = { ...responseBlog, user: blog.user }
+      const updatedBlog = { ...responseBlog, user: selectedBlog.user }
       const updatedBlogs = blogs.map(blog =>
         blog.id === responseBlog.id
           ? updatedBlog
@@ -114,6 +114,24 @@ const App = () => {
         setNotification(error.response.data.error, 'red')
       } else {
         setNotification('an error occured', 'red')
+      }
+    }
+  }
+
+  const handleDeleteBlog = async (selectedBlog) => {
+    if (window.confirm(`Remove blog "${selectedBlog.title}" by "${selectedBlog.author}"?`)) {
+      try {
+        await blogService.deleteBlog(selectedBlog, user.token)
+        const updatedBlogs = blogs.filter((blog) => blog.id !== selectedBlog.id)
+        setBlogs(updatedBlogs)
+        setNotification(`a blog "${selectedBlog.title}" by "${selectedBlog.author}" deleted`, 'green')
+      } catch (error) {
+        console.log(error)
+        if (error.response.data.error) {
+          setNotification(error.response.data.error, 'red')
+        } else {
+          setNotification('an error occured', 'red')
+        }
       }
     }
   }
@@ -136,9 +154,9 @@ const App = () => {
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
           <BlogForm
             handleSubmit={handleCreateNewBlog}
-            handleTitleChange={({target}) => setTitle(target.value)}
-            handleAuthorChange={({target}) => setAuthor(target.value)}
-            handleUrlChange={({target}) => setUrl(target.value)}
+            handleTitleChange={({ target }) => setTitle(target.value)}
+            handleAuthorChange={({ target }) => setAuthor(target.value)}
+            handleUrlChange={({ target }) => setUrl(target.value)}
             title={title}
             author={author}
             url={url}
@@ -146,9 +164,14 @@ const App = () => {
         </Togglable>
         <br/>
         <div>
-          {sortBlogs(blogs).map(blog =>
-            <Blog key={blog.id} blog={blog} handleLikeClick={() => handleLikeBlog(blog)} />
-          )}
+          {sortBlogs(blogs).map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLikeClick={() => handleLikeBlog(blog)}
+              handleDeleteClick={() => handleDeleteBlog(blog)}
+            />
+          ))}
         </div>
       </div>
     )
