@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogCreateForm from './components/BlogCreateForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -82,65 +84,6 @@ const App = () => {
     setTimeout(() => setNotifyText(''), 2500)
   }
 
-  const loginForm = () => {
-    return(
-      <div>
-        <h2>log in to application</h2>
-        <form onSubmit={handleLogin}>
-          username
-          <input
-            type='text'
-            name='username'
-            value={username}
-            onChange={({target}) => setUsername(target.value)}
-          />
-          <br/>
-          password
-          <input
-            type='text'
-            name='password'
-            value={password}
-            onChange={({target}) => setPassword(target.value)}
-          />
-          <br/>
-          <button type='submit'>login</button>
-        </form>
-      </div>
-    )
-  }
-
-  const blogAddForm = () => {
-    return (
-      <form onSubmit={handleCreateNewBlog}>
-        title:
-        <input
-          type='text'
-          name='title'
-          value={title}
-          onChange={({target}) => setTitle(target.value)}
-        />
-        <br/>
-        author:
-        <input
-          type='text'
-          name='author'
-          value={author}
-          onChange={({target}) => setAuthor(target.value)}
-        />
-        <br/>
-        url:
-        <input
-          type='text'
-          name='url'
-          value={url}
-          onChange={({target}) => setUrl(target.value)}
-        />
-        <br/>
-        <button type='submit'>create</button>
-      </form>
-    )
-  }
-
   const blogList = () => {
     return(
       <div>
@@ -150,7 +93,15 @@ const App = () => {
             logout
           </button>
         </p>
-        {blogAddForm()}
+        <BlogCreateForm
+          handleSubmit={handleCreateNewBlog}
+          handleTitleChange={({target}) => setTitle(target.value)}
+          handleAuthorChange={({target}) => setAuthor(target.value)}
+          handleUrlChange={({target}) => setUrl(target.value)}
+          title={title}
+          author={author}
+          url={url}
+        />
         <br/>
         <div>
           {blogs.map(blog =>
@@ -167,7 +118,13 @@ const App = () => {
       <Notification text={notifyText} color={notifyColor}/>
       {user
         ? blogList()
-        : loginForm()
+        : <LoginForm
+          handleSubmit={handleLogin}
+          handleUsernameChange={({target}) => setUsername(target.value)}
+          handlePasswordChange={({target}) => setPassword(target.value)}
+          username={username}
+          password={password}
+        />
       }
     </div>
   )

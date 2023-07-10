@@ -7,7 +7,7 @@ const Blog = ({blog}) => (
 )
 
 Blog.propTypes = {
-  blog: PropTypes.array
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog

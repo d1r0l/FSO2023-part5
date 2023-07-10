@@ -16,5 +16,8 @@ module.exports = {
     'quotes': ['error', 'single'],
     'semi': ['error', 'never'],
     'react/react-in-jsx-scope': 0
+  },
+  settings: {
+    react: { version: 'detect' }
   }
 }
