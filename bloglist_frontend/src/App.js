@@ -62,14 +62,21 @@ const App = () => {
 
   const handleCreateNewBlog = async (event) => {
     event.preventDefault()
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
     try {
+      const newBlog = {
+        title: title,
+        author: author,
+        url: url
+      }
       const savedBlog = await blogService.createNew(newBlog, user.token)
-      const updatedBlogs = blogs.concat(savedBlog)
+      const savedBlogWithUser = {
+        ...savedBlog,
+        user: {
+          name: user?.name,
+          username: user?.username
+        }
+      }
+      const updatedBlogs = blogs.concat(savedBlogWithUser)
       blogFormRef.current.toggleVisibility()
       setBlogs(updatedBlogs)
       setNotification(`a new blog "${savedBlog.title}" by "${savedBlog.author}" added`, 'green')
