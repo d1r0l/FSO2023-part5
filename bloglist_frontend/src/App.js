@@ -73,7 +73,8 @@ const App = () => {
         ...savedBlog,
         user: {
           name: user?.name,
-          username: user?.username
+          username: user?.username,
+          id: user?.id
         }
       }
       const updatedBlogs = blogs.concat(savedBlogWithUser)
