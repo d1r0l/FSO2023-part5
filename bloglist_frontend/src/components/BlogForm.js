@@ -20,7 +20,7 @@ const BlogForm = ({ handleCreateBlog }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='blogForm'>
       title:
       <input
         type='text'
