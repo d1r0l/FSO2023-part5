@@ -9,12 +9,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [ blogs, setBlogs ] = useState([])
-  const [ username, setUsername ] = useState('')
-  const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
-  const [ title, setTitle ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ url, setUrl ] = useState('')
   const [ notifyColor, setNotifyColor ] = useState('green')
   const [ notifyText, setNotifyText ] = useState('')
 
@@ -38,18 +33,11 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    const credentials = {
-      username: username,
-      password: password
-    }
+  const handleLogin = async (credentials) => {
     const loggedUser = await loginService(credentials)
     if (loggedUser) {
       window.localStorage.setItem('loggedBloglistAppUser', JSON.stringify(loggedUser))
       setUser(loggedUser)
-      setPassword('')
-      setUsername('')
       setNotification('login successful', 'green')
     } else {
       setNotification('wrong credentials', 'red')
@@ -62,14 +50,8 @@ const App = () => {
     setNotification('logged out', 'green')
   }
 
-  const handleCreateNewBlog = async (event) => {
-    event.preventDefault()
+  const handleCreateBlog = async (newBlog) => {
     try {
-      const newBlog = {
-        title: title,
-        author: author,
-        url: url
-      }
       const savedBlog = await blogService.createNew(newBlog, user.token)
       const savedBlogWithUser = {
         ...savedBlog,
@@ -83,9 +65,6 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
       setBlogs(updatedBlogs)
       setNotification(`a new blog "${savedBlog.title}" by "${savedBlog.author}" added`, 'green')
-      setTitle('')
-      setAuthor('')
-      setUrl('')
     } catch (error) {
       console.log(error)
       if (error.response.data.error) {
@@ -152,15 +131,7 @@ const App = () => {
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm
-            handleSubmit={handleCreateNewBlog}
-            handleTitleChange={({ target }) => setTitle(target.value)}
-            handleAuthorChange={({ target }) => setAuthor(target.value)}
-            handleUrlChange={({ target }) => setUrl(target.value)}
-            title={title}
-            author={author}
-            url={url}
-          />
+          <BlogForm handleCreateBlog={handleCreateBlog}/>
         </Togglable>
         <br/>
         <div>
@@ -184,13 +155,7 @@ const App = () => {
       <Notification text={notifyText} color={notifyColor}/>
       {user
         ? blogList()
-        : <LoginForm
-          handleSubmit={handleLogin}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          username={username}
-          password={password}
-        />
+        : <LoginForm handleLogin={handleLogin}/>
       }
     </div>
   )

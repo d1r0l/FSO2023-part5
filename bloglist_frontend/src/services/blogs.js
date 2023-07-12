@@ -26,8 +26,7 @@ const addLike = async (Blog, token) => {
 }
 
 const deleteBlog = async (Blog, token) => {
-  const request = await axios.delete(`${baseUrl}/${Blog.id}`, authConfig(token))
-  console.log(request)
+  await axios.delete(`${baseUrl}/${Blog.id}`, authConfig(token))
 }
 
 export default { getAll, createNew, addLike, deleteBlog }
