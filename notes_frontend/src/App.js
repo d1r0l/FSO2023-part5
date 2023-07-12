@@ -10,7 +10,6 @@ import loginService from './services/login'
 
 const App = () => {
   const [ notes, setNotes ] = useState([])
-  const [ newNote, setNewNote ] = useState('A new note...')
   const [ showAll, setShowAll ] = useState(true)
   const [ errorMessage, setErrorMessage ] = useState(null)
   const [ username, setUsername ] = useState('')
@@ -59,24 +58,12 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
-  }
-
-  const addNote = (event) => {
-    noteFormRef.current.toggleVisibility()
-    event.preventDefault()
-    const newObject = {
-      id: notes.length + 1,
-      content: newNote,
-      important: Math.random() < 0.5
-    }
-
+  const addNote = (noteObject) => {
     noteService
-      .create(newObject)
+      .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
+        noteFormRef.current.toggleVisibility()
       })
   }
 
@@ -124,11 +111,7 @@ const App = () => {
         <div>
           <p>{user.name} logged in</p>
           <Togglable buttonLabel='new note' ref={noteFormRef}>
-            <NoteForm
-              onSubmit={addNote}
-              handleChange={handleNoteChange}
-              value={newNote}
-            />
+            <NoteForm createNote={addNote} />
           </Togglable>
         </div>
       }
