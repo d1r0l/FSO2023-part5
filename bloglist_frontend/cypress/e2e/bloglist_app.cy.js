@@ -3,7 +3,7 @@ describe('Blog app', function() {
     cy.resetDB()
     cy.createUser('tester', 'p455w0rd', 'Cypress Will')
     cy.createUser('tester2', 'p455w0rd2', 'Cypress Kill')
-    cy.visit('')  
+    cy.visit('')
   })
 
   it('front page can be opened', function() {
@@ -45,7 +45,7 @@ describe('Blog app', function() {
       beforeEach(function() {
         cy.login('tester', 'p455w0rd')
       })
-  
+
       it('A blog can be created', function() {
         cy.contains('new blog').click()
         cy.get('#input-title').type('A scientific tests')
@@ -61,7 +61,7 @@ describe('Blog app', function() {
           cy.createBlog('A scientific tests', 'Dr Tester', 'blogurl.io')
           cy.visit('')
         })
-        
+
         it('User can like a blog', function() {
           cy.contains('A scientific tests by Dr Tester')
             .parent()
@@ -83,8 +83,8 @@ describe('Blog app', function() {
           cy.contains('delete')
             .click()
           cy.contains(
-              'a blog "A scientific tests" by "Dr Tester" deleted'
-            ).should('have.css', 'border-color', 'rgb(0, 128, 0)')
+            'a blog "A scientific tests" by "Dr Tester" deleted'
+          ).should('have.css', 'border-color', 'rgb(0, 128, 0)')
           cy.should(
             'not.contain',
             'A scientific tests by Dr Tester'

@@ -27,7 +27,7 @@ const Blog = ({ blog, user, handleLikeClick, handleDeleteClick }) => {
           {visible ? 'hide' : 'view'}
         </button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='togglableContent'>
         <span>{blog.url}</span>
         <br />
         <span>likes: {blog.likes} </span>
