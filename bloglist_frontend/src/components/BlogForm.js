@@ -23,6 +23,7 @@ const BlogForm = ({ handleCreateBlog }) => {
     <form onSubmit={handleSubmit} className='blogForm'>
       title:
       <input
+        id='input-title'
         type='text'
         name='title'
         value={title}
@@ -31,6 +32,7 @@ const BlogForm = ({ handleCreateBlog }) => {
       <br/>
       author:
       <input
+        id='input-author'
         type='text'
         name='author'
         value={author}
@@ -39,13 +41,14 @@ const BlogForm = ({ handleCreateBlog }) => {
       <br/>
       url:
       <input
+        id='input-url'
         type='text'
         name='url'
         value={url}
         onChange={({ target }) => setUrl(target.value)}
       />
       <br/>
-      <button type='submit'>create</button>
+      <button id='button-create' type='submit'>create</button>
     </form>
   )
 }

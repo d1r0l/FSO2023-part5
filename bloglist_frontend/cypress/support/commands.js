@@ -23,3 +23,42 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('resetDB', () => {
+  cy.request('POST', `${Cypress.env('server_api_url')}/testing/reset`)
+})
+
+Cypress.Commands.add('createUser', (username, password, name) => {
+  cy.request('POST', `${Cypress.env('server_api_url')}/users`,{
+    username: username,
+    password: password,
+    name: name
+  })
+})
+
+Cypress.Commands.add('createBlog', (title, author, url) => {
+  const userData = JSON.parse(localStorage.getItem('loggedBloglistAppUser'))
+  cy.request({
+    url: `${Cypress.env('server_api_url')}/blogs`,
+    method: 'POST',
+    body: {
+      title: title,
+      author: author,
+      url: url,
+      user: userData.id
+    },
+    headers: {
+      'Authorization': `Bearer ${userData.token}`
+    }
+  })
+})
+
+Cypress.Commands.add('login', (username, password) => {
+  cy.request('POST', `${Cypress.env('server_api_url')}/login`, {
+    username: username,
+    password: password
+  }).then(({ body }) => {
+    localStorage.setItem('loggedBloglistAppUser', JSON.stringify(body))
+  })
+  cy.visit('')
+})
