@@ -36,7 +36,7 @@ Cypress.Commands.add('createUser', (username, password, name) => {
   })
 })
 
-Cypress.Commands.add('createBlog', (title, author, url) => {
+Cypress.Commands.add('createBlog', (title, author, url, likes) => {
   const userData = JSON.parse(localStorage.getItem('loggedBloglistAppUser'))
   cy.request({
     url: `${Cypress.env('server_api_url')}/blogs`,
@@ -45,6 +45,7 @@ Cypress.Commands.add('createBlog', (title, author, url) => {
       title: title,
       author: author,
       url: url,
+      likes: (likes ? likes : 0),
       user: userData.id
     },
     headers: {
